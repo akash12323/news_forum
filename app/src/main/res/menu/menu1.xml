@@ -9,8 +9,6 @@
 
         <item android:id="@+id/sports"
             android:title="Sports"/>
-        <item android:title="Politics"
-            android:id="@+id/politics"/>
         <item android:id="@+id/health"
             android:title="Health"/>
         <item android:id="@+id/entertainment"

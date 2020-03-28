@@ -13,9 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newsforum.*
 import com.example.newsforum.data.api.Client
-import com.example.newsforum.data.res.TopNewsArticlesItem
+import com.example.newsforum.data.res.entertainment.EntertainmentArticlesItem
 import com.example.newsforum.data.res.search.SearchArticlesItem
-import com.example.newsforum.ui.adapter.*
+import com.example.newsforum.ui.adapter.EntertainmentAdapter
+import com.example.newsforum.ui.adapter.SearchAdapter
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.main_include.*
@@ -24,17 +25,17 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class EntertainmentActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    val list = arrayListOf<TopNewsArticlesItem>()
-    val topnewsadapter = TopNewsAdapter(list)
+    val list6 = arrayListOf<EntertainmentArticlesItem>()
+    val entertainmentadapter = EntertainmentAdapter(list6)
 
     val searchedlist = arrayListOf<SearchArticlesItem>()
     val searchadapter = SearchAdapter(searchedlist)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_entertainment)
 
         setSupportActionBar(toolbar)
 
@@ -51,14 +52,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         navView.setNavigationItemSelectedListener(this)
 
-        recyclerView.apply {
-            layoutManager = LinearLayoutManager(this@MainActivity,RecyclerView.VERTICAL,false)
-            adapter = topnewsadapter
-        }
-        topnewsadapter.onItemClick = {
-            Toast.makeText(this,it.title,Toast.LENGTH_SHORT).show()
-            val i = Intent(this, NewsDetailActivity::class.java)
+        toolbar.title = "Entertainment"
 
+        recyclerView.apply {
+            layoutManager = LinearLayoutManager(this@EntertainmentActivity,
+                RecyclerView.VERTICAL,false)
+            adapter = entertainmentadapter
+        }
+        entertainmentadapter.onItemClick = {
+            val i = Intent(this,
+                NewsDetailActivity::class.java)
             i.putExtra("title",it.title.toString())
             i.putExtra("author",it.author.toString())
             i.putExtra("urlToImage",it.urlToImage.toString())
@@ -67,22 +70,65 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             i.putExtra("url",it.url.toString())
             i.putExtra("publishedAt",it.publishedAt.toString())
             i.putExtra("content",it.content.toString())
-
             startActivity(i)
         }
 
         GlobalScope.launch {
-            val response = withContext(Dispatchers.IO){ Client.api.getTopNews("in") }
+            val response = withContext(Dispatchers.IO){ Client.api.getEntertainmentNews("in",
+                "entertainment") }
 
             if (response.isSuccessful){
                 response.body()?.let {res->
-                    res.articles?.let { list.clear()
-                        list.addAll(it) }
-                    runOnUiThread { topnewsadapter.notifyDataSetChanged() }
+                    res.articles?.let { list6.clear()
+                        list6.addAll(it) }
+                    runOnUiThread { entertainmentadapter.notifyDataSetChanged() }
                 }
             }
         }
+    }
 
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.topnews ->{
+                Toast.makeText(this,"Top News Pressed", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, MainActivity::class.java))
+                toolbar.title = "Top Headlines"
+            }
+            R.id.sports ->{
+                Toast.makeText(this,"Sports Pressed", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, SportsActivity::class.java))
+
+            }
+            R.id.entertainment ->{
+                Toast.makeText(this,"Entertainment Pressed", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this,
+                    EntertainmentActivity::class.java))
+
+            }
+            R.id.health ->{
+                Toast.makeText(this,"Health Pressed", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, HealthActivity::class.java))
+
+            }
+            R.id.science ->{
+                Toast.makeText(this,"Science Pressed", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this,
+                    ScienceActivity::class.java))
+
+            }
+            R.id.technology ->{
+                Toast.makeText(this,"Technology Pressed", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this,
+                    TechnologyActivity::class.java))
+
+            }
+            R.id.business ->{
+                Toast.makeText(this,"Business Pressed", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this,BusinessActivity::class.java))
+            }
+        }
+        drawer.closeDrawer(GravityCompat.START)
+        return true
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -90,7 +136,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val item = menu?.findItem(R.id.search)
         val searchView = item?.actionView as SearchView
-//        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
 
         searchView.setQueryHint("type here to search")
 
@@ -121,7 +166,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     public fun LoadJson(keyword:String){
         if (keyword.length > 2){
             recyclerView.apply {
-                layoutManager = LinearLayoutManager(this@MainActivity,RecyclerView.VERTICAL,false)
+                layoutManager = LinearLayoutManager(this@EntertainmentActivity,RecyclerView.VERTICAL,false)
                 adapter = searchadapter
             }
             searchadapter.onItemClick = {
@@ -153,68 +198,24 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         else{
             recyclerView.apply {
-                layoutManager = LinearLayoutManager(this@MainActivity,RecyclerView.VERTICAL,false)
-                adapter = topnewsadapter
+                layoutManager = LinearLayoutManager(this@EntertainmentActivity,RecyclerView.VERTICAL,false)
+                adapter = entertainmentadapter
             }
 
             GlobalScope.launch {
-                val response = withContext(Dispatchers.IO){ Client.api.getTopNews("in") }
+                val response = withContext(Dispatchers.IO){ Client.api.getEntertainmentNews("in",
+                    "entertainment") }
 
                 if (response.isSuccessful){
                     response.body()?.let {res->
                         res.articles?.let { searchedlist.clear()
-                            list.clear()
-                            list.addAll(it) }
-                        runOnUiThread { topnewsadapter.notifyDataSetChanged() }
+                            list6.clear()
+                            list6.addAll(it) }
+                        runOnUiThread { entertainmentadapter.notifyDataSetChanged() }
                     }
                 }
             }
         }
     }
 
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            R.id.topnews->{
-                Toast.makeText(this,"Top News Pressed", Toast.LENGTH_SHORT).show()
-                startActivity(Intent(this,MainActivity::class.java))
-                toolbar.title = "Top Headlines"
-            }
-            R.id.sports->{
-                Toast.makeText(this,"Sports Pressed", Toast.LENGTH_SHORT).show()
-                startActivity(Intent(this,
-                    SportsActivity::class.java))
-
-            }
-            R.id.entertainment->{
-                Toast.makeText(this,"Entertainment Pressed", Toast.LENGTH_SHORT).show()
-                startActivity(Intent(this,
-                    EntertainmentActivity::class.java))
-
-            }
-            R.id.health->{
-                Toast.makeText(this,"Health Pressed", Toast.LENGTH_SHORT).show()
-                startActivity(Intent(this,
-                    HealthActivity::class.java))
-
-            }
-            R.id.science->{
-                Toast.makeText(this,"Science Pressed", Toast.LENGTH_SHORT).show()
-                startActivity(Intent(this,
-                    ScienceActivity::class.java))
-
-            }
-            R.id.technology->{
-                Toast.makeText(this,"Technology Pressed", Toast.LENGTH_SHORT).show()
-                startActivity(Intent(this,
-                    TechnologyActivity::class.java))
-
-            }
-            R.id.business->{
-                Toast.makeText(this,"Business Pressed", Toast.LENGTH_SHORT).show()
-                startActivity(Intent(this,BusinessActivity::class.java))
-            }
-        }
-        drawer.closeDrawer(GravityCompat.START)
-        return true
-    }
 }

@@ -11,10 +11,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.view.NewsDetailActivity"></activity>
-        <activity
-            android:name=".ui.view.MainActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout">
+        <activity android:name=".ui.view.TechnologyActivity"></activity>
+        <activity android:name=".ui.view.EntertainmentActivity" />
+        <activity android:name=".ui.view.HealthActivity" />
+        <activity android:name=".ui.view.ScienceActivity" />
+        <activity android:name=".ui.view.BusinessActivity" />
+        <activity android:name=".ui.view.SportsActivity" />
+        <activity android:name=".ui.view.NewsDetailActivity" />
+        <activity android:name=".ui.view.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

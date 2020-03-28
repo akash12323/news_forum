@@ -10,7 +10,7 @@ import com.example.newsforum.data.res.sports.SportsArticlesItem
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item.view.*
 
-class SearchAdapter(val user:List<SearchArticlesItem>):
+class SearchAdapter(var user:List<SearchArticlesItem>):
     RecyclerView.Adapter<SearchAdapter.ItemVieHolder>(){
 
     var onItemClick:((user: SearchArticlesItem)->Unit)? = null

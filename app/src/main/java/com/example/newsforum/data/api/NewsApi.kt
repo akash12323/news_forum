@@ -4,7 +4,6 @@ import com.example.newsforum.data.res.TopNewsResponse
 import com.example.newsforum.data.res.business.BusinessResponse
 import com.example.newsforum.data.res.entertainment.EntertainmentResponse
 import com.example.newsforum.data.res.health.HealthResponse
-import com.example.newsforum.data.res.politics.PoliticsResponse
 import com.example.newsforum.data.res.science.ScienceResponse
 import com.example.newsforum.data.res.search.SearchEverythingResponse
 import com.example.newsforum.data.res.sports.SportsResponse
@@ -25,10 +24,6 @@ interface NewsApi {
     @GET("top-headlines?apiKey=1c0fedf4d3414f9389a056a833ce10d2")
     suspend fun getScienceNews(@Query("country")country:String,
                               @Query("category")category:String):Response<ScienceResponse>
-
-    @GET("top-headlines?apiKey=1c0fedf4d3414f9389a056a833ce10d2")
-    suspend fun getPoliticsNews(@Query("country")country:String,
-                              @Query("category")category:String):Response<PoliticsResponse>
 
     @GET("top-headlines?apiKey=1c0fedf4d3414f9389a056a833ce10d2")
     suspend fun getHealthNews(@Query("country")country:String,
