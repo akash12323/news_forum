@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newsforum.R
+import com.example.newsforum.data.res.entertainment.EntertainmentArticlesItem
 import com.example.newsforum.data.res.health.HealthArticlesItem
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item.view.*

@@ -210,8 +210,7 @@ class SportsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
 
                 if (response.isSuccessful){
                     response.body()?.let {res->
-                        res.articles?.let { searchedlist.clear()
-                            list2.clear()
+                        res.articles?.let { list2.clear()
                             list2.addAll(it) }
                         runOnUiThread { sportsadapter.notifyDataSetChanged() }
                     }

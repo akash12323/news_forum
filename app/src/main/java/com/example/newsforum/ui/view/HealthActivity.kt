@@ -73,18 +73,13 @@ class HealthActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
             startActivity(i)
         }
 
-        GlobalScope.launch {
-            val response = withContext(Dispatchers.IO){ Client.api.getHealthNews("in",
-                "health") }
+        loadHealthNews()
 
-            if (response.isSuccessful){
-                response.body()?.let {res->
-                    res.articles?.let { list4.clear()
-                        list4.addAll(it) }
-                    runOnUiThread { healthadapter.notifyDataSetChanged() }
-                }
-            }
-        }
+//        refresh1.setOnRefreshListener {
+//            loadHealthNews()
+//            refresh1.isRefreshing = false
+//        }
+
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -107,8 +102,7 @@ class HealthActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
             }
             R.id.health ->{
                 Toast.makeText(this,"Health Pressed", Toast.LENGTH_SHORT).show()
-                startActivity(Intent(this,
-                    HealthActivity::class.java))
+                startActivity(Intent(this, HealthActivity::class.java))
 
             }
             R.id.science ->{
@@ -203,22 +197,23 @@ class HealthActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
                 layoutManager = LinearLayoutManager(this@HealthActivity,RecyclerView.VERTICAL,false)
                 adapter = healthadapter
             }
+            loadHealthNews()
+        }
+    }
 
-            GlobalScope.launch {
-                val response = withContext(Dispatchers.IO){ Client.api.getHealthNews("in",
-                    "health") }
+    private fun loadHealthNews(){
+        GlobalScope.launch {
+            val response = withContext(Dispatchers.IO){ Client.api.getHealthNews("in",
+                "health") }
 
-                if (response.isSuccessful){
-                    response.body()?.let {res->
-                        res.articles?.let { searchedlist.clear()
-                            list4.clear()
-                            list4.addAll(it) }
-                        runOnUiThread { healthadapter.notifyDataSetChanged() }
-                    }
+            if (response.isSuccessful){
+                response.body()?.let {res->
+                    res.articles?.let { list4.clear()
+                        list4.addAll(it) }
+                    runOnUiThread { healthadapter.notifyDataSetChanged() }
                 }
             }
         }
     }
-
 
 }

@@ -1,24 +1,34 @@
 package com.example.newsforum.ui.view
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.webkit.WebViewClient
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.newsforum.R
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_news_detail.*
+import java.lang.Exception
 
 
 class NewsDetailActivity : AppCompatActivity() {
+
+    lateinit var url:String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_news_detail)
 
+        setSupportActionBar(toolbar)
+
         val title = intent.getStringExtra("title")
         val author = intent.getStringExtra("author")
         val description = intent.getStringExtra("desc")
         val source = intent.getStringExtra("source")
-        val url = intent.getStringExtra("url")
+        url = intent.getStringExtra("url")
         val publishedAt = intent.getStringExtra("publishedAt")
         val content = intent.getStringExtra("content")
 
@@ -33,6 +43,8 @@ class NewsDetailActivity : AppCompatActivity() {
 
         val webSettings = webView.settings
         webSettings.javaScriptEnabled = true
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     override fun onBackPressed() {
@@ -42,5 +54,30 @@ class NewsDetailActivity : AppCompatActivity() {
         else{
             super.onBackPressed()
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.share,menu)
+
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        var id = item.itemId
+        if (id == R.id.share){
+
+            try{
+                val i = Intent(Intent.ACTION_SEND)
+                i.type = "text/plan"
+                i.putExtra(Intent.EXTRA_SUBJECT,Uri.parse("source"))
+
+                i.putExtra(Intent.EXTRA_TEXT,url)
+                startActivity(Intent.createChooser(i,"Share with: "))
+            }
+            catch (e:Exception){
+                Toast.makeText(this,"cannot share",Toast.LENGTH_SHORT).show()
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

@@ -5,12 +5,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.newsforum.*
 import com.example.newsforum.data.api.Client
 import com.example.newsforum.data.res.TopNewsArticlesItem
@@ -156,14 +158,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 layoutManager = LinearLayoutManager(this@MainActivity,RecyclerView.VERTICAL,false)
                 adapter = topnewsadapter
             }
-
             GlobalScope.launch {
                 val response = withContext(Dispatchers.IO){ Client.api.getTopNews("in") }
 
                 if (response.isSuccessful){
                     response.body()?.let {res->
-                        res.articles?.let { searchedlist.clear()
-                            list.clear()
+                        res.articles?.let { list.clear()
                             list.addAll(it) }
                         runOnUiThread { topnewsadapter.notifyDataSetChanged() }
                     }
@@ -217,4 +217,5 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawer.closeDrawer(GravityCompat.START)
         return true
     }
+
 }
