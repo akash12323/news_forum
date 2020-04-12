@@ -56,6 +56,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawer.addDrawerListener(toogle)
         toogle.syncState()
 
+        //adss
+        MobileAds.initialize(this)
+
+        val adRequest = AdRequest.Builder().build()
+        adView.loadAd(adRequest)
+
         navView.setNavigationItemSelectedListener(this)
 
         recyclerView.apply {
@@ -89,11 +95,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
             }
         }
-
-        MobileAds.initialize(this)
-
-        val adRequest = AdRequest.Builder().build()
-        adView.loadAd(adRequest)
 
     }
 

@@ -50,3 +50,6 @@ interface NewsApi {
 //https://newsapi.org/v2/top-headlines?country=us&apiKey=1c0fedf4d3414f9389a056a833ce10d2
 
 // @GET("everything?q=apple&from=2020-03-26&to=2020-03-26&sortBy=popularity&apiKey=1c0fedf4d3414f9389a056a833ce10d2")
+
+//ca-app-pub-2963035765518004~5319620880 appid
+//ca-app-pub-2963035765518004/7593542383  adId
