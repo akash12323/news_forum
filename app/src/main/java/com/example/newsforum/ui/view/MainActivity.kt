@@ -1,5 +1,7 @@
 package com.example.newsforum.ui.view
 
+import android.app.NotificationChannel
+import android.app.StatusBarManager
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,6 +11,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.SearchView
+import androidx.core.app.NotificationCompat
 import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +21,8 @@ import com.example.newsforum.data.api.Client
 import com.example.newsforum.data.res.TopNewsArticlesItem
 import com.example.newsforum.data.res.search.SearchArticlesItem
 import com.example.newsforum.ui.adapter.*
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.main_include.*
@@ -84,6 +89,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
             }
         }
+
+        MobileAds.initialize(this)
+
+        val adRequest = AdRequest.Builder().build()
+        adView.loadAd(adRequest)
 
     }
 
@@ -178,40 +188,44 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 Toast.makeText(this,"Top News Pressed", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this,MainActivity::class.java))
                 toolbar.title = "Top Headlines"
+                finish()
             }
             R.id.sports->{
                 Toast.makeText(this,"Sports Pressed", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this,
                     SportsActivity::class.java))
+                finish()
 
             }
             R.id.entertainment->{
                 Toast.makeText(this,"Entertainment Pressed", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this,
                     EntertainmentActivity::class.java))
+                finish()
 
             }
             R.id.health->{
                 Toast.makeText(this,"Health Pressed", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this,
                     HealthActivity::class.java))
-
+                finish()
             }
             R.id.science->{
                 Toast.makeText(this,"Science Pressed", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this,
                     ScienceActivity::class.java))
-
+                finish()
             }
             R.id.technology->{
                 Toast.makeText(this,"Technology Pressed", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this,
                     TechnologyActivity::class.java))
-
+                finish()
             }
             R.id.business->{
                 Toast.makeText(this,"Business Pressed", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this,BusinessActivity::class.java))
+                finish()
             }
         }
         drawer.closeDrawer(GravityCompat.START)

@@ -10,4 +10,5 @@
     <color name="colorAcc">#151c25</color>
     <color name="colorAc">#151c25</color>
     <color name="colorgray">#20262E</color>
+    <color name="colorTransparent">#00000000</color>
 </resources>

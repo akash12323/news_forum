@@ -2,16 +2,17 @@ package com.example.newsforum.ui.view
 
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.WindowManager
 import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.newsforum.R
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_news_detail.*
-import java.lang.Exception
 
 
 class NewsDetailActivity : AppCompatActivity() {
@@ -21,6 +22,12 @@ class NewsDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_news_detail)
+
+        if (Build.VERSION.SDK_INT >= 21) {
+            val window = this.window
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+            window.statusBarColor = this.resources.getColor(R.color.colorTransparent)
+        }
 
         setSupportActionBar(toolbar)
 

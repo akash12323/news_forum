@@ -92,40 +92,42 @@ class SportsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
                 Toast.makeText(this,"Top News Pressed", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this, MainActivity::class.java))
                 toolbar.title = "Top Headlines"
+                finish()
             }
             R.id.sports ->{
                 Toast.makeText(this,"Sports Pressed", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this,
                     SportsActivity::class.java))
-
+                finish()
             }
             R.id.entertainment ->{
                 Toast.makeText(this,"Entertainment Pressed", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this,
                     EntertainmentActivity::class.java))
-
+                finish()
             }
             R.id.health ->{
                 Toast.makeText(this,"Health Pressed", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this,
                     HealthActivity::class.java))
-
+                finish()
             }
             R.id.science ->{
                 Toast.makeText(this,"Science Pressed", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this,
                     ScienceActivity::class.java))
-
+                finish()
             }
             R.id.technology ->{
                 Toast.makeText(this,"Technology Pressed", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this,
                     TechnologyActivity::class.java))
-
+                finish()
             }
             R.id.business ->{
                 Toast.makeText(this,"Business Pressed", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this,BusinessActivity::class.java))
+                finish()
             }
         }
         drawer.closeDrawer(GravityCompat.START)
