@@ -14,7 +14,6 @@ object Client {
         .addConverterFactory(GsonConverterFactory.create(gson))
         .build()
 
-    val api = retrofit.create(
-        NewsApi::class.java)
+    val api = retrofit.create(NewsApi::class.java)
 
 }
