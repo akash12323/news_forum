@@ -1,10 +1,12 @@
 package com.example.newsforum.ui.view
 
 import android.content.Intent
+import android.net.ConnectivityManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.SearchView
@@ -17,6 +19,8 @@ import com.example.newsforum.data.res.science.ScienceArticlesItem
 import com.example.newsforum.data.res.search.SearchArticlesItem
 import com.example.newsforum.ui.adapter.ScienceAdapter
 import com.example.newsforum.ui.adapter.SearchAdapter
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.main_include.*
@@ -24,6 +28,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.error
 
 class ScienceActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -52,6 +57,11 @@ class ScienceActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
         navView.setNavigationItemSelectedListener(this)
 
+        MobileAds.initialize(this){}
+
+        val adRequest = AdRequest.Builder().build()
+        adView.loadAd(adRequest)
+
         toolbar.title = "Science"
 
         recyclerView.apply {
@@ -73,6 +83,26 @@ class ScienceActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             startActivity(i)
         }
 
+        var connectivityManager = this.getSystemService(AppCompatActivity.CONNECTIVITY_SERVICE) as ConnectivityManager
+        var networkInfo = connectivityManager.getActiveNetworkInfo()
+
+        if (networkInfo!=null && networkInfo.isConnected){
+            loadScience()
+        }
+        else if (networkInfo == null){
+            ll3.visibility = View.GONE
+            ll2.visibility = View.GONE
+            error.visibility = View.VISIBLE
+        }
+        btn.setOnClickListener {
+            if (networkInfo!=null && networkInfo.isConnected){
+                loadScience()
+            }
+        }
+
+    }
+
+    private fun loadScience() {
         GlobalScope.launch {
             val response = withContext(Dispatchers.IO){ Client.api.getScienceNews("in",
                 "science") }
@@ -81,7 +111,11 @@ class ScienceActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                 response.body()?.let {res->
                     res.articles?.let {list5.clear()
                         list5.addAll(it) }
-                    runOnUiThread { scienceadapter.notifyDataSetChanged() }
+                    runOnUiThread { scienceadapter.notifyDataSetChanged()
+                        ll3.visibility = View.GONE
+                        ll2.visibility = View.VISIBLE
+                        error.visibility = View.GONE
+                    }
                 }
             }
         }
@@ -112,12 +146,12 @@ class ScienceActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                     HealthActivity::class.java))
                 finish()
             }
-            R.id.science ->{
-                Toast.makeText(this,"Science Pressed", Toast.LENGTH_SHORT).show()
-                startActivity(Intent(this,
-                    ScienceActivity::class.java))
-                finish()
-            }
+//            R.id.science ->{
+//                Toast.makeText(this,"Science Pressed", Toast.LENGTH_SHORT).show()
+//                startActivity(Intent(this,
+//                    ScienceActivity::class.java))
+//                finish()
+//            }
             R.id.technology ->{
                 Toast.makeText(this,"Technology Pressed", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this,

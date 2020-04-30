@@ -3,8 +3,11 @@ package com.example.newsforum.ui.view
 import android.app.NotificationChannel
 import android.app.StatusBarManager
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -22,14 +25,17 @@ import com.example.newsforum.data.res.TopNewsArticlesItem
 import com.example.newsforum.data.res.search.SearchArticlesItem
 import com.example.newsforum.ui.adapter.*
 import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.InterstitialAd
 import com.google.android.gms.ads.MobileAds
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.main_include.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -38,6 +44,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     val searchedlist = arrayListOf<SearchArticlesItem>()
     val searchadapter = SearchAdapter(searchedlist)
+
+    private lateinit var interstitialAd: InterstitialAd
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +65,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toogle.syncState()
 
         //adss
-        MobileAds.initialize(this)
+        MobileAds.initialize(this){}
 
         val adRequest = AdRequest.Builder().build()
         adView.loadAd(adRequest)
@@ -84,6 +92,27 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             startActivity(i)
         }
 
+        var connectivityManager = this.getSystemService(AppCompatActivity.CONNECTIVITY_SERVICE) as ConnectivityManager
+        var networkInfo = connectivityManager.getActiveNetworkInfo()
+
+        if(networkInfo != null  && networkInfo.isConnected){
+            loadHeadlines()
+        }
+        else if(networkInfo == null){
+            ll3.visibility = View.GONE
+            ll2.visibility = View.GONE
+            error.visibility = View.VISIBLE
+        }
+
+        if(networkInfo != null  && networkInfo.isConnected){
+            btn.setOnClickListener {
+                loadHeadlines()
+            }
+        }
+
+    }
+
+    private fun loadHeadlines() {
         GlobalScope.launch {
             val response = withContext(Dispatchers.IO){ Client.api.getTopNews("in") }
 
@@ -91,12 +120,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 response.body()?.let {res->
                     res.articles?.let { list.clear()
                         list.addAll(it) }
-                    runOnUiThread { topnewsadapter.notifyDataSetChanged() }
+                    runOnUiThread { topnewsadapter.notifyDataSetChanged()
+                        ll3.visibility = View.GONE
+                        ll2.visibility = View.VISIBLE
+                        error.visibility = View.GONE
+                    }
                 }
             }
         }
-
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu2,menu)
@@ -185,16 +218,38 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
-            R.id.topnews->{
-                Toast.makeText(this,"Top News Pressed", Toast.LENGTH_SHORT).show()
-                startActivity(Intent(this,MainActivity::class.java))
-                toolbar.title = "Top Headlines"
-                finish()
-            }
+//            R.id.topnews->{
+//                Toast.makeText(this,"Top News Pressed", Toast.LENGTH_SHORT).show()
+//                startActivity(Intent(this,MainActivity::class.java))
+//                toolbar.title = "Top Headlines"
+//
+//                interstitialAd = InterstitialAd(this)
+//                interstitialAd.adUnitId = "ca-app-pub-2963035765518004/9649364662"
+//                interstitialAd.loadAd(AdRequest.Builder().build())
+//                if (interstitialAd.isLoaded){
+//                    interstitialAd.show()
+//                }
+//                else{
+//                    Log.d("TAG", "The interstitial wasn't loaded yet.")
+//                }
+//
+//                finish()
+//            }
             R.id.sports->{
                 Toast.makeText(this,"Sports Pressed", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this,
                     SportsActivity::class.java))
+
+                interstitialAd = InterstitialAd(this)
+                interstitialAd.adUnitId = "ca-app-pub-2963035765518004/9649364662"
+                interstitialAd.loadAd(AdRequest.Builder().build())
+                if (interstitialAd.isLoaded){
+                    interstitialAd.show()
+                }
+                else{
+                    Log.d("TAG", "The interstitial wasn't loaded yet.")
+                }
+
                 finish()
 
             }
@@ -202,6 +257,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 Toast.makeText(this,"Entertainment Pressed", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this,
                     EntertainmentActivity::class.java))
+
+                interstitialAd = InterstitialAd(this)
+                interstitialAd.adUnitId = "ca-app-pub-2963035765518004/9649364662"
+                interstitialAd.loadAd(AdRequest.Builder().build())
+                if (interstitialAd.isLoaded){
+                    interstitialAd.show()
+                }
+                else{
+                    Log.d("TAG", "The interstitial wasn't loaded yet.")
+                }
+
                 finish()
 
             }
@@ -209,23 +275,67 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 Toast.makeText(this,"Health Pressed", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this,
                     HealthActivity::class.java))
+
+                interstitialAd = InterstitialAd(this)
+                interstitialAd.adUnitId = "ca-app-pub-2963035765518004/9649364662"
+                interstitialAd.loadAd(AdRequest.Builder().build())
+                if (interstitialAd.isLoaded){
+                    interstitialAd.show()
+                }
+                else{
+                    Log.d("TAG", "The interstitial wasn't loaded yet.")
+                }
+
                 finish()
             }
             R.id.science->{
                 Toast.makeText(this,"Science Pressed", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this,
                     ScienceActivity::class.java))
+
+                interstitialAd = InterstitialAd(this)
+                interstitialAd.adUnitId = "ca-app-pub-2963035765518004/9649364662"
+                interstitialAd.loadAd(AdRequest.Builder().build())
+                if (interstitialAd.isLoaded){
+                    interstitialAd.show()
+                }
+                else{
+                    Log.d("TAG", "The interstitial wasn't loaded yet.")
+                }
+
                 finish()
             }
             R.id.technology->{
                 Toast.makeText(this,"Technology Pressed", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this,
                     TechnologyActivity::class.java))
+
+                interstitialAd = InterstitialAd(this)
+                interstitialAd.adUnitId = "ca-app-pub-2963035765518004/9649364662"
+                interstitialAd.loadAd(AdRequest.Builder().build())
+                if (interstitialAd.isLoaded){
+                    interstitialAd.show()
+                }
+                else{
+                    Log.d("TAG", "The interstitial wasn't loaded yet.")
+                }
+
                 finish()
             }
             R.id.business->{
                 Toast.makeText(this,"Business Pressed", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this,BusinessActivity::class.java))
+
+                interstitialAd = InterstitialAd(this)
+                interstitialAd.adUnitId = "ca-app-pub-2963035765518004/9649364662"
+                interstitialAd.loadAd(AdRequest.Builder().build())
+                if (interstitialAd.isLoaded){
+                    interstitialAd.show()
+                }
+                else{
+                    Log.d("TAG", "The interstitial wasn't loaded yet.")
+                }
+
                 finish()
             }
         }
